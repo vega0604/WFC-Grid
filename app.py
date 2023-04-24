@@ -1,10 +1,22 @@
 from constants import WIDTH, HEIGHT
+from loader import loadImages
+from tile import Tile
 import pygame
+
 
 class App:
     def __init__(self) -> None:
         self.win = pygame.display.set_mode((WIDTH, HEIGHT))
         pygame.display.set_caption("Wave Function Collapse(Grid)")
+        
+        self.setup()
+
+    def setup(self):
+        images = loadImages(6)
+
+        self.baseTiles = []
+        for i, img in enumerate(images):
+            self.baseTiles.append(Tile(0, i, images[i]))
 
     def check_events(self):
         for event in pygame.event.get():
