@@ -12,21 +12,42 @@ class App:
         self.setup()
 
     def setup(self):
+        '''
+        Description:
+
+            initializes required variables, etc.
+            Called once during initialization
+        '''
         images = loadImages(6)
 
         self.baseTiles = []
         for i, img in enumerate(images):
-            self.baseTiles.append(Tile(0, i, images[i]))
+            self.baseTiles.append(Tile(i, images[i]))
 
     def check_events(self):
+        '''
+        Description:
+
+            called every main event loop iteration
+        '''
         for event in pygame.event.get():
-            if event.type == pygame.QUIT:
+            if event.type == pygame.QUIT: # if close button pressed
                 self.running = False
 
     def update(self):
+        '''
+        Description:
+
+            event loop update method
+        '''
         pygame.display.update()
 
     def run(self):
+        '''
+        Description:
+
+            main event loop
+        '''
         self.running = True
         while self.running:
             self.check_events()
