@@ -5,3 +5,6 @@ This repo is intended to reproduce a simple version of the wave function collaps
 I will be attempting this problem with a very basic understanding of the topic, as well as no additional research aside from links provided below:
 
 https://www.boristhebrave.com/2020/04/13/wave-function-collapse-explained/
+
+This video was only watched once and not in its entirety  
+https://youtu.be/rI_y2GAlQFM 
