@@ -1,2 +1,6 @@
 # Ignore Virtual Environment
 GameDev/
+
+# Cached files
+__pycache__/
+*.pyc
