@@ -12,7 +12,7 @@ def loadImage(filename) -> pygame.Surface:
     '''
 
     filename = os.path.join(filename)
-    return pygame.image.load(filename).convert_alpha()
+    return pygame.image.load(filename)
 
 def loadImages(amount) -> list:
     '''

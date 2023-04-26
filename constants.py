@@ -1,11 +1,10 @@
+from loader import loadImage
 
 WIDTH = HEIGHT = 700
+GRID_SIZE = 5
 
-DESCRIPTIONS = {
-    0 : ['rr', 'rr', 'rr', 'rr'],
-    1 : ['gg', 'gg', 'gg', 'gg'],
-    2 : ['bb', 'bb', 'bb', 'bb'],
-    3 : ['rr', 'rg', 'gg', 'rg'],
-    4 : ['rr', 'rb', 'bb', 'rb'],
-    5 : ['gg', 'gb', 'bb', 'gb'],
+TYPES = {
+    0: {'img': loadImage('./resources/wfc0.png'), 'description': ['000', '000', '000', '000']},
+    1: {'img': loadImage('./resources/wfc1.png'), 'description': ['000', '010', '010', '010']},
+    2: {'img': loadImage('./resources/wfc2.png'), 'description': ['000', '000', '000', '000']}
 }

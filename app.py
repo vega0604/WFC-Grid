@@ -1,5 +1,4 @@
-from constants import WIDTH, HEIGHT
-from loader import loadImages
+from constants import WIDTH, HEIGHT, GRID_SIZE
 from tile import Tile
 import pygame
 
@@ -18,11 +17,11 @@ class App:
             initializes required variables, etc.
             Called once during initialization
         '''
-        images = loadImages(6)
 
-        self.baseTiles = []
-        for i, img in enumerate(images):
-            self.baseTiles.append(Tile(i, images[i]))
+        # Grid Setup
+        self.grid = []
+        for y in range(GRID_SIZE**2):
+            self.grid.append(Tile())
 
     def check_events(self):
         '''
@@ -34,12 +33,28 @@ class App:
             if event.type == pygame.QUIT: # if close button pressed
                 self.running = False
 
+    def draw(self):
+        '''
+        Description:
+
+
+        '''
+        for y in range(GRID_SIZE):
+            for x in range(GRID_SIZE):
+                tile = self.grid[x + GRID_SIZE*y]
+                if tile.type == None:
+                    continue
+
+                self.win.blit(tile.img,(x * (WIDTH/GRID_SIZE), y * (WIDTH/GRID_SIZE)))
+
     def update(self):
         '''
         Description:
 
             event loop update method
         '''
+        # self.next()
+        self.draw()
         pygame.display.update()
 
     def run(self):
