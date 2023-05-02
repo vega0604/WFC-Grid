@@ -20,8 +20,17 @@ class App:
 
         # Grid Setup
         self.grid = []
-        for y in range(GRID_SIZE**2):
-            self.grid.append(Tile())
+        for y in range(GRID_SIZE):
+            for x in range(GRID_SIZE):
+                self.grid.append(Tile(x, y))
+
+        self.grid[0].type = 1
+
+    def handleKeydown(self, e):
+        keys = pygame.key.get_pressed()
+
+        if keys[pygame.K_RETURN]:
+            self.next()
 
     def check_events(self):
         '''
@@ -32,20 +41,33 @@ class App:
         for event in pygame.event.get():
             if event.type == pygame.QUIT: # if close button pressed
                 self.running = False
+            if event.type == pygame.KEYDOWN:
+                self.handleKeydown(event)
 
     def draw(self):
         '''
         Description:
 
-
+            draws tiles to window
         '''
-        for y in range(GRID_SIZE):
-            for x in range(GRID_SIZE):
-                tile = self.grid[x + GRID_SIZE*y]
-                if tile.type == None:
-                    continue
+        for tile in self.grid:
+            if not tile.collapsed:
+                continue
 
-                self.win.blit(tile.img,(x * (WIDTH/GRID_SIZE), y * (WIDTH/GRID_SIZE)))
+            self.win.blit(tile.img,(tile.x * (WIDTH/GRID_SIZE), tile.y * (HEIGHT/GRID_SIZE)))
+
+    def next(self):
+        uncollapsed = list(filter(lambda t: not t.collapsed, self.grid))
+        if len(uncollapsed) < 1:
+            return
+        
+        for tile in uncollapsed:
+            tile.calcEnt(self.grid)
+
+        nextTile = min(uncollapsed, key=lambda t: t.entropy)
+        print(f'x: {nextTile.x}, y: {nextTile.y}, entropy: {nextTile.entropy}')
+        if len(nextTile.possibilities) > 0:
+            nextTile.collapse()
 
     def update(self):
         '''
@@ -63,8 +85,10 @@ class App:
 
             main event loop
         '''
+        clock = pygame.time.Clock()
         self.running = True
         while self.running:
+            clock.tick(60)
             self.check_events()
             self.update()
 
