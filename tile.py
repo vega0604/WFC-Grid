@@ -110,7 +110,7 @@ class Tile:
         return mag
 
     def calcEnt(self, grid):
-        self.possibilities = []
+        self.possibilities.clear()
         for y in range(-1, 2):
             for x in range(-1, 2):
                 neighbour = next((t for t in grid if t.pos == (self.x+x, self.y+y)), None)
@@ -119,5 +119,22 @@ class Tile:
                 # print(neighbour.pos, self.pos)
 
                 self.entropy = self.checkPossible(neighbour)
+
+        self.keepDupes()
+
+    def keepDupes(self):
+        new = []
+        og = self.possibilities[:]
+        for tile in og:
+            dupe = next((t for t in og if t.desc == tile.desc and t != tile), None)
+            if dupe:
+                new.append(tile)
+        
+        if len(new) < 1:
+            return
+        
+        self.possibilities = new
+
+        
                 
         

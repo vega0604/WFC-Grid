@@ -1,5 +1,6 @@
 from constants import WIDTH, HEIGHT, GRID_SIZE
 from tile import Tile
+from random import randint
 import pygame
 
 
@@ -24,7 +25,7 @@ class App:
             for x in range(GRID_SIZE):
                 self.grid.append(Tile(x, y))
 
-        self.grid[0].type = 1
+        self.grid[randint(0, GRID_SIZE-1)].type = 1
 
     def handleKeydown(self, e):
         keys = pygame.key.get_pressed()
