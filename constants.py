@@ -1,7 +1,7 @@
 from loader import loadImage
 
 WIDTH = HEIGHT = 700
-GRID_SIZE = 5
+GRID_SIZE = 20
 DEFAULT_ENTROPY = 12
 
 TYPES = {

@@ -26,6 +26,31 @@ class Tile:
         # Logic Properties
         self.entropy = DEFAULT_ENTROPY # number of unique images, including rotations
         self.collapsed = False
+
+    def __hash__(self):
+        return hash(str(self))
+
+    def __str__(self) -> str:
+        return f'(x, y): {self.pos}'
+
+    def __eq__(self, other: object) -> bool:
+        return self.desc == other.desc
+
+    @property
+    def top(self):
+        return self.desc[0]
+    
+    @property
+    def bottom(self):
+        return self.desc[2]
+    
+    @property
+    def right(self):
+        return self.desc[1]
+    
+    @property
+    def left(self):
+        return self.desc[3]
         
     @property
     def type(self):
@@ -82,26 +107,30 @@ class Tile:
         self.rotate(chosen.rot)
 
     def checkPossible(self, neighbour):
-        
+        '''
+        Description:
+
+            checks if neighbour 
+        '''
+        possible = []
         for t in TYPES.keys():
             for r in range(4):
                 tempTile = Tile(self.x, self.y, type=t)
-                # print(tempTile.desc, neighbour.desc)
                 tempTile.rotate(r)
                 if neighbour.y < self.y:
-                    if neighbour.desc[2] == tempTile.desc[0]:
-                        self.possibilities.append(tempTile)
+                    if neighbour.bottom == tempTile.top[::-1]:
+                        possible.append(tempTile)
                 elif neighbour.x > self.x:
-                    if neighbour.desc[3] == tempTile.desc[1]:
-                        self.possibilities.append(tempTile)
+                    if neighbour.left == tempTile.right[::-1]:
+                        possible.append(tempTile)
                 elif neighbour.y > self.y:
-                    if neighbour.desc[0] == tempTile.desc[2]:
-                        self.possibilities.append(tempTile)
+                    if neighbour.top == tempTile.bottom[::-1]:
+                        possible.append(tempTile)
                 elif neighbour.x < self.x:
-                    if neighbour.desc[1] == tempTile.desc[3]:
-                        self.possibilities.append(tempTile)
+                    if neighbour.right == tempTile.left[::-1]:
+                        possible.append(tempTile)
 
-        return len(self.possibilities)
+        return possible
     
 
     def diff(self, tile):
@@ -111,30 +140,31 @@ class Tile:
 
     def calcEnt(self, grid):
         self.possibilities.clear()
+        possibilities = []
         for y in range(-1, 2):
             for x in range(-1, 2):
                 neighbour = next((t for t in grid if t.pos == (self.x+x, self.y+y)), None)
-                if not neighbour or not neighbour.collapsed or self.diff(neighbour) != 1:
+                if not neighbour or self.diff(neighbour) != 1:
                     continue
-                # print(neighbour.pos, self.pos)
+                possibilities.append(self.checkPossible(neighbour))
 
-                self.entropy = self.checkPossible(neighbour)
-
-        self.keepDupes()
-
-    def keepDupes(self):
-        new = []
-        og = self.possibilities[:]
-        for tile in og:
-            dupe = next((t for t in og if t.desc == tile.desc and t != tile), None)
-            if dupe:
-                new.append(tile)
-        
-        if len(new) < 1:
+        # Keep Common Tiles Among Four Neighbours
+        if len(possibilities) < 1:
             return
         
-        self.possibilities = new
+        common = self.keepCommon(possibilities)
 
-        
-                
-        
+        self.possibilities = common
+        self.entropy = len(self.possibilities)
+
+    def keepCommon(self, groups):
+        '''
+        Description:
+
+            keeps only common possible tiles
+        '''
+        common = set(groups[0])
+        for g in groups:
+            common = set(common) & set(g)
+
+        return list(common)

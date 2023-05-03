@@ -25,13 +25,16 @@ class App:
             for x in range(GRID_SIZE):
                 self.grid.append(Tile(x, y))
 
-        self.grid[randint(0, GRID_SIZE-1)].type = 1
+        self.grid[randint(0, GRID_SIZE**2-1)].type = 1
+        # self.grid[randint(0, GRID_SIZE**2-1)].type = randint(0, len(TYPES)-1)
 
     def handleKeydown(self, e):
         keys = pygame.key.get_pressed()
 
         if keys[pygame.K_RETURN]:
-            self.next()
+            # self.win.fill((0, 0, 0))
+            self.win.fill((randint(0, 255), randint(0, 255), randint(0, 255)))
+            self.setup()
 
     def check_events(self):
         '''
@@ -59,16 +62,17 @@ class App:
 
     def next(self):
         uncollapsed = list(filter(lambda t: not t.collapsed, self.grid))
+        collapsed = list(filter(lambda t: t.collapsed, self.grid))
         if len(uncollapsed) < 1:
             return
         
         for tile in uncollapsed:
-            tile.calcEnt(self.grid)
+            tile.calcEnt(collapsed)
 
         nextTile = min(uncollapsed, key=lambda t: t.entropy)
-        print(f'x: {nextTile.x}, y: {nextTile.y}, entropy: {nextTile.entropy}')
-        if len(nextTile.possibilities) > 0:
-            nextTile.collapse()
+        # print(f'x: {nextTile.x}, y: {nextTile.y}, entropy: {nextTile.entropy}')
+
+        nextTile.collapse()
 
     def update(self):
         '''
@@ -76,7 +80,7 @@ class App:
 
             event loop update method
         '''
-        # self.next()
+        self.next()
         self.draw()
         pygame.display.update()
 
